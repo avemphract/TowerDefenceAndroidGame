@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="hexagonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" hexsidelength="8" staggeraxis="y" staggerindex="odd" nextlayerid="4" nextobjectid="54">
+ <layer id="1" name="Tile Layer 1" width="20" height="20">
+  <data encoding="base64">
+   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+  </data>
+ </layer>
+ <objectgroup id="2" name="map_elements">
+  <object id="4" type="non-walkable" x="24" y="40">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="5" type="path" x="0" y="28">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="6" type="path" x="8" y="40">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="7" type="path" x="16" y="52">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="8" type="path" x="32" y="52">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="9" type="path" x="48" y="52">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="10" type="path" x="56" y="64">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="11" type="path" x="48" y="76">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="12" type="path" x="56" y="88">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="13" type="path" x="64" y="100">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="14" type="path" x="80" y="100">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="15" type="path" x="88" y="112">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="16" type="path" x="104" y="112">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="17" type="path" x="128" y="100">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="18" type="path" x="136" y="88">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="19" type="path" x="152" y="88">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="20" type="path" x="168" y="88">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="21" type="path" x="176" y="100">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="22" type="path" x="184" y="112">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="23" type="path" x="176" y="124">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="24" type="path" x="168" y="136">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="25" type="path" x="176" y="148">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="26" type="path" x="184" y="160">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="27" type="path" x="200" y="160">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="28" type="path" x="208" y="172">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="29" type="path" x="224" y="172">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="30" type="path" x="232" y="184">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="31" type="path" x="240" y="196">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="32" type="path" x="248" y="208">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="33" type="path" x="264" y="208">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="34" type="path" x="280" y="208">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="35" type="path" x="296" y="208">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="36" type="path" x="312" y="208">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="37" type="path" x="64" y="76">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="38" type="path" x="72" y="88">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="39" type="path" x="80" y="76">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="40" type="path" x="88" y="64">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="41" type="path" x="104" y="64">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="42" type="path" x="112" y="76">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="43" type="path" x="128" y="76">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="44" type="path" x="120" y="112">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="45" type="path" x="184" y="136">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="46" type="path" x="192" y="148">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="47" type="path" x="216" y="160">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="48" type="path" x="216" y="184">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="49" type="path" x="248" y="184">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="50" type="path" x="256" y="196">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="51" type="path" x="272" y="196">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="52" type="path" x="160" y="100">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+  <object id="53" type="path" x="-8" y="16">
+   <polygon points="0,0 0,8 8,12 16,8 16,0 8,-4"/>
+  </object>
+ </objectgroup>
+</map>
