@@ -73,7 +73,7 @@ public class SelectedEntityContainer implements Listener<OrthographicCamera> {
         for (int i = 0; i < focusableComponent.actions.size; i++) {
             float rad = MathUtils.HALF_PI - ((focusableComponent.actions.size - 1) / 2f - i) * MathUtils.HALF_PI / 2;
             EntityAction entityAction = new EntityAction(focusableComponent.actions.get(i), x, y);
-            entityAction.setPosition(screenPos.x + MathUtils.cos(rad) * 80, screenPos.y + MathUtils.sin(rad) * 80);
+            entityAction.setPosition(screenPos.x + MathUtils.cos(rad) * 160 / camera.zoom, screenPos.y + MathUtils.sin(rad) * 160 / camera.zoom);
             //Gdx.app.log(TAG, entityAction.getX() + "," + entityAction.getY());
             entityActions.add(entityAction);
         }
@@ -87,11 +87,11 @@ public class SelectedEntityContainer implements Listener<OrthographicCamera> {
     }
 
     @Override
-    public void receive(Signal<OrthographicCamera> signal, OrthographicCamera object) {
-        object.project(screenPos.set(x, y, 0));
+    public void receive(Signal<OrthographicCamera> signal, OrthographicCamera camera) {
+        camera.project(screenPos.set(x, y, 0));
         for (int i = 0; i < entityActions.size; i++) {
             float rad = MathUtils.HALF_PI - ((entityActions.size - 1) / 2f - i) * MathUtils.HALF_PI / 2;
-            entityActions.get(i).setPosition(screenPos.x + MathUtils.cos(rad) * 80, screenPos.y + MathUtils.sin(rad) * 80);
+            entityActions.get(i).setPosition(screenPos.x + MathUtils.cos(rad) * 160 / camera.zoom, screenPos.y + MathUtils.sin(rad) * 160 / camera.zoom);
         }
     }
 

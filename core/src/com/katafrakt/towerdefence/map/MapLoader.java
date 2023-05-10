@@ -52,7 +52,9 @@ public class MapLoader {
 
         for (int i = 0; i < mapSizeX + 1; i++) {
             nodeArray.add(new Node(i, -1, 4));
+            nodeArray.add(new Node(i, -2, 4));
             nodeArray.add(new Node(i - mapSizeY / 2, mapSizeY, 4));
+            nodeArray.add(new Node(i - mapSizeY / 2, mapSizeY+1, 4));
         }
         int x = mapSizeX + 1;
         int down = 0;
@@ -60,7 +62,9 @@ public class MapLoader {
             if (i % 2 == 0)
                 down--;
             nodeArray.add(new Node(x + down, i, 4));
+            nodeArray.add(new Node(x + down + 1, i, 4));
             nodeArray.add(new Node(+down, i, 4));
+            nodeArray.add(new Node(+down-1, i, 4));
         }
 
         return new Map(nodeArray, startNode, endNode);

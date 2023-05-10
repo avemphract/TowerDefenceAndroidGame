@@ -1,8 +1,12 @@
 package com.katafrakt.towerdefence.core.weapons;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.GdxAI;
 import com.katafrakt.towerdefence.Main;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
+import com.katafrakt.towerdefence.ashley.components.ai.AiComponent;
+import com.katafrakt.towerdefence.ashley.components.ai.HaveTarget;
+import com.katafrakt.towerdefence.ashley.components.ai.TowerAiComponent;
 import com.katafrakt.towerdefence.core.AttackType;
 
 public abstract class Weapon {
@@ -37,10 +41,15 @@ public abstract class Weapon {
         return ownerTransform;
     }
 
-    public abstract void attack(Entity target);
+    public void update(){
+        if (remainPercent()>1){
+            attack(((HaveTarget) AiComponent.getComponent(owner)).getTarget());
+        }
+    };
+    protected abstract void attack(Entity target);
 
     public float remainPercent() {
-        return (Main.getMain().getTotalTime() - lastAttackTime) * attackRate;
+        return (GdxAI.getTimepiece().getTime() - lastAttackTime) * attackRate;
     }
 
     public float getAttackAmount() {
@@ -53,6 +62,9 @@ public abstract class Weapon {
 
     public float getRange() {
         return range;
+    }
+    public float getRange2(){
+        return range*range;
     }
 
     @Override
@@ -67,6 +79,7 @@ public abstract class Weapon {
                 ", lastAttackTime=" + lastAttackTime +
                 '}';
     }
+
 
     @SuppressWarnings("unchecked")
     public abstract static class Builder<B extends Builder<B, T>, T extends Weapon> implements javafx.util.Builder<Weapon> {

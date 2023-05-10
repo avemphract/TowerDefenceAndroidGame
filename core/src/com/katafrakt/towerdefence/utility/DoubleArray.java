@@ -18,9 +18,7 @@ public class DoubleArray<V1,V2> extends Array<Pair<V1,V2>> {
 
     @Override
     public void clear() {
-        for (Pair<V1,V2> pair:this) {
-            pairPool.free(pair);
-        }
+        pairPool.freeAll(this);
         super.clear();
     }
 }

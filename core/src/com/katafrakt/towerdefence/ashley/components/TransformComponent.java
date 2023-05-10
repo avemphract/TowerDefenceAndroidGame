@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.katafrakt.towerdefence.utility.DebugRender;
@@ -42,7 +43,8 @@ public class TransformComponent extends Vector2 implements Component, Pool.Poola
 
     @Override
     public void render(ShapeRenderer shapeRenderer, Entity entity) {
-        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.setColor(Color.BROWN);
+        shapeRenderer.rectLine(x, y, x + MathUtils.cos(orientation)*4, y + MathUtils.sin(orientation)*4,0.5f);
         shapeRenderer.circle(x, y, 0.5f);
     }
 }

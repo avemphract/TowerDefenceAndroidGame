@@ -1,12 +1,12 @@
 package com.katafrakt.towerdefence.core.weapons.bullet;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.katafrakt.towerdefence.Main;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
 import com.katafrakt.towerdefence.core.weapons.Weapon;
-import com.katafrakt.towerdefence.entities.spawner.BulletSpawner;
 
 public class BurstWeapon extends BulletWeapon {
     protected float burstInterval;
@@ -28,7 +28,7 @@ public class BurstWeapon extends BulletWeapon {
 
 
         spawn(ownerTransform, vel, attackAmount, time, bulletRadius);
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
 
     }
 

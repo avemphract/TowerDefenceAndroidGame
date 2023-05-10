@@ -73,7 +73,7 @@ public class EntityInput {
             Entity entity=getEntityFromCoordinate(worldPos.x,worldPos.y);
             //Gdx.app.log(TAG,"Pos: "+worldPos.x+","+worldPos.y);
             if (focusedEntity!=null&&PlayerAiComponent.MAPPER.has(focusedEntity)){
-                MessageManager.getInstance().dispatchMessage(EntityType.PLAYER.ordinal(),worldPos);
+                MessageManager.getInstance().dispatchMessage(BuildingType.MESSAGE,worldPos);
                 return true;
             }
             if (entity!=focusedEntity){

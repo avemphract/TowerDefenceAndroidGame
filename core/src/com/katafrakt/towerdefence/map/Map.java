@@ -1,10 +1,11 @@
 package com.katafrakt.towerdefence.map;
 
+import static com.katafrakt.towerdefence.utility.ConstValues.ROOT3;
+import static com.katafrakt.towerdefence.utility.ConstValues.ROOT3DIV2;
+
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.badlogic.gdx.ai.pfa.SmoothableGraphPath;
+import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,19 +14,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.Collections;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectSet;
-import com.badlogic.gdx.utils.StreamUtils;
-import com.katafrakt.towerdefence.pfa.AbstractGridGraph;
 import com.katafrakt.towerdefence.pfa.GraphAlly;
 import com.katafrakt.towerdefence.pfa.GraphEnemy;
 import com.katafrakt.towerdefence.pfa.Node;
 
-import org.junit.jupiter.api.Test;
-import org.w3c.dom.traversal.NodeFilter;
-
-import java.awt.image.ColorConvertOp;
 import java.util.Arrays;
 
 public class Map {
@@ -46,7 +40,6 @@ public class Map {
     public Node startNode;
     public Node endNode;
 
-    GraphPath<Node> path;
     Vector2 baseVector = new Vector2();
 
     public Map(Array<Node> nodes, Node startNode, Node endNode) {
@@ -61,7 +54,6 @@ public class Map {
         enemyGridGraph = new GraphEnemy(this);
 
         endRemain = enemyGridGraph.getNodeRemain();
-        path = allyGridGraph.getSmoothPath(startNode, endNode);
     }
 
     public void render(ShapeRenderer shapeRenderer, SpriteBatch spriteBatch) {
@@ -73,8 +65,17 @@ public class Map {
 
         shapeRenderer.setColor(Color.MAGENTA);
         shapeRenderer.rect(endNode.x - 3, endNode.y - 3, 6, 6);
+        for (Node node : nodes) {
+            for (Connection<Node> connection : allyGridGraph.getConnections(node)) {
+                if (connection.getCost() < 100)
+                    shapeRenderer.line(connection.getFromNode().x, connection.getFromNode().y, connection.getToNode().x, connection.getToNode().y);
+            }
+        }
+
         shapeRenderer.end();
 
+        enemyGridGraph.render(shapeRenderer, spriteBatch);
+        allyGridGraph.render(shapeRenderer, spriteBatch);
     }
 
     public Node findNode(Vector3 vector) {
@@ -86,6 +87,55 @@ public class Map {
     }
 
     public Node findNode(float x, float y) {
+        float q = (x / ROOT3 - y / 3) / (Node.LENGTH);
+        float r = (y * 2 / 3) / (Node.LENGTH);
+        int q_round = MathUtils.round(q);
+        int r_round = MathUtils.round(r);
+        float q_decimal = q - q_round;
+        float r_decimal = r - r_round;
+        if (Math.abs(q_decimal) >= Math.abs(r_decimal)) {
+            return findFromTable(q_round + MathUtils.round(q_decimal + r_decimal * 0.5f), r_round);
+        } else {
+            return findFromTable(q_round, r_round + MathUtils.round(r_decimal + q_decimal * 0.5f));
+        }
+/*
+        int dx = MathUtils.round((q_decimal + 0.5 * r_decimal) * (q_decimal * q_decimal >= r_decimal * r_decimal));
+        int dy = MathUtils.round((r_decimal + 0.5 * q_decimal) * (q_decimal * q_decimal < r_decimal * r_decimal));
+
+        /*
+        Gdx.app.log(TAG, q + "," + r);
+        if (r_decimal > 0.25f) {
+            if (q_decimal > 0) {
+                if (r_decimal + q_decimal > 0.75) {
+                    return findFromTable(q_round - 1, r_round + 1);
+                } else {
+                    return findFromTable(q_round, r_round);
+                }
+            } else {
+                if (r_decimal + q_decimal < -0.25) {
+                    return findFromTable(q_round, r_round + 1);
+                } else {
+                    return findFromTable(q_round, r_round);
+                }
+            }
+        } else if (r_decimal > -0.25f) {
+            return findFromTable(q_round, r_round);
+        } else {
+            if (q_decimal > 0) {
+                if (r_decimal + q_decimal > -0.25) {
+                    return findFromTable(q_round, r_round - 1);
+                } else {
+                    return findFromTable(q_round, r_round);
+                }
+            } else {
+                if (r_decimal + q_decimal < -0.75) {
+                    return findFromTable(q_round + 1, r_round - 1);
+                } else {
+                    return findFromTable(q_round, r_round);
+                }
+            }
+        }
+        /*
         int refY = y > 0 ? (int) (y / Node.TEMPLATE_HEIGHT) : (int) (y / Node.TEMPLATE_HEIGHT) - 1;
         int refX = x > 0 ? (int) (x / Node.WIDTH) : (int) (x / Node.WIDTH) - 1;
 
@@ -132,7 +182,35 @@ public class Map {
             }
         }
         //Gdx.app.error(TAG, "X: " + x + "  Y: " + y + "  refX: " + refX + "  refY: " + refY + "  modX: " + modX + "  modY: " + modY);
-        return null;
+        return null;*/
+    }
+
+    public ObjectSet<Node> findAllNode(Vector3 vector) {
+        return findAllNode(vector.x, vector.y);
+    }
+
+    public ObjectSet<Node> findAllNode(Vector2 vector) {
+        return findAllNode(vector.x, vector.y);
+    }
+
+    public ObjectSet<Node> findAllNode(float x, float y) {
+        float q = (x / ROOT3 - y / 3) / (Node.LENGTH);
+        float r = (y * 2 / 3) / (Node.LENGTH);
+        int q_round = MathUtils.round(q);
+        int r_round = MathUtils.round(r);
+        float q_decimal = q - q_round;
+        float r_decimal = r - r_round;
+        ObjectSet<Node> result = new ObjectSet<>();
+        if (Math.abs(q_decimal) + 0.01f >= Math.abs(r_decimal)) {
+            result.add(findFromTable(q_round + MathUtils.round(q_decimal + r_decimal * 0.5f + 0.01f), r_round));
+            result.add(findFromTable(q_round + MathUtils.round(q_decimal + r_decimal * 0.5f - 0.01f), r_round));
+
+        }
+        if (Math.abs(q_decimal) <= Math.abs(r_decimal) + 0.01f) {
+            result.add(findFromTable(q_round, r_round + MathUtils.round(r_decimal + q_decimal * 0.5f + 0.01f)));
+            result.add(findFromTable(q_round, r_round + MathUtils.round(r_decimal + q_decimal * 0.5f - 0.01f)));
+        }
+        return result;
     }
 
     public Node findFromTable(int x, int y) {
@@ -174,27 +252,27 @@ public class Map {
         }
 
         for (int i = 0; i < range; i++) {
-            //System.out.print("("+(-i)+","+(range)+")");
-            nodes.add(nodeMap.get(node.tableY - i).get(node.tableX + range));
+            if (nodeMap.get(node.tableY - i) != null || nodeMap.get(node.tableY - i).get(node.tableX + range) != null)
+                nodes.add(nodeMap.get(node.tableY - i).get(node.tableX + range));
         }
 
         for (int i = 0; i < range; i++) {
-            //System.out.print("("+(-range)+","+(range-i)+")");
-            nodes.add(nodeMap.get(node.tableY - range).get(node.tableX + range - i));
+            if (nodeMap.get(node.tableY - range) != null || nodeMap.get(node.tableY - range).get(node.tableX + range - i) != null)
+                nodes.add(nodeMap.get(node.tableY - range).get(node.tableX + range - i));
         }
 
         for (int i = 0; i < range; i++) {
-            //System.out.print("("+(-range+i)+","+(-i)+")");
-            nodes.add(nodeMap.get(node.tableY - range + i).get(node.tableX - i));
+            if (nodeMap.get(node.tableY - range + i) != null || nodeMap.get(node.tableY - range + i).get(node.tableX - i) != null)
+                nodes.add(nodeMap.get(node.tableY - range + i).get(node.tableX - i));
         }
 
         for (int i = 0; i < range; i++) {
-            //System.out.print("("+(+i)+","+(-range)+")");
-            nodes.add(nodeMap.get(node.tableY + i).get(node.tableX - range));
+            if (nodeMap.get(node.tableY + i) != null || nodeMap.get(node.tableY + i).get(node.tableX - range) != null)
+                nodes.add(nodeMap.get(node.tableY + i).get(node.tableX - range));
         }
         for (int i = 0; i < range; i++) {
-            //System.out.print("("+(+range)+","+(-range+i)+")");
-            nodes.add(nodeMap.get(node.tableY + range).get(node.tableX - range + i));
+            if (nodeMap.get(node.tableY + range) != null || nodeMap.get(node.tableY + range).get(node.tableX - range + i) != null)
+                nodes.add(nodeMap.get(node.tableY + range).get(node.tableX - range + i));
         }
         return nodes;
     }

@@ -14,7 +14,7 @@ public class GridConnection implements Connection<Node> {
 
     @Override
     public float getCost() {
-        return startNode.dst(endNode) + MathUtils.random();
+        return (10 * startNode.connectionMultiplier * endNode.connectionMultiplier + MathUtils.random());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.katafrakt.towerdefence.pfa;
 
+import static com.katafrakt.towerdefence.utility.ConstValues.ROOT3DIV2;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.Connection;
@@ -9,6 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
+import com.katafrakt.towerdefence.ashley.components.buildings.BuildingComponent;
+import com.katafrakt.towerdefence.map.Map;
+import com.katafrakt.towerdefence.screens.GameManager;
 
 public class Node extends Vector2 {
     private static final String TAG = Node.class.getSimpleName();
@@ -35,7 +40,6 @@ public class Node extends Vector2 {
         }
     }
 
-    public static final float ROOT3DIV2 = MathUtils.sinDeg(60);
     public static final int LENGTH = 8;
     public static final float WIDTH = LENGTH * ROOT3DIV2 * 2;
     public static final float HEIGHT = LENGTH * 2;
@@ -48,11 +52,11 @@ public class Node extends Vector2 {
     public final float[] vertices;
     public final int tableX;
     public final int tableY;
-    public final Vector2 posVector;
 
     public Type type;
 
-    public Entity building;
+    private Entity building;
+    public float connectionMultiplier = 1;
     public final ObjectSet<Entity> enemyEntities = new ObjectSet<>();
 
     public Node(int tableX, int tableY, int typeIndex) {
@@ -61,10 +65,8 @@ public class Node extends Vector2 {
         this.tableY = tableY;
         type = Type.getByIndex(typeIndex);
 
-        x = (LENGTH * (float) Math.pow(3, 0.5f) * (tableX + tableY / 2f));
-        y = (LENGTH * (3 / 2f) * tableY);
-
-        posVector = new Vector2(x, y);
+        x = (LENGTH * 2 * ROOT3DIV2) * (tableX + tableY / 2f);
+        y = (LENGTH * 3 * 0.5f) * tableY;
 
         vertices = new float[]{
                 x, (y + LENGTH),
@@ -78,6 +80,21 @@ public class Node extends Vector2 {
 
     }
 
+    public Entity getBuilding() {
+        return building;
+    }
+
+    public Node setBuilding(Entity building) {
+        this.building = building;
+        if (building != null) {
+            connectionMultiplier = 1000;
+        } else {
+            connectionMultiplier = 1;
+        }
+        GameManager.getInstance().getMap().allyGridGraph.raycastCollisionDetector.changeNode(this);
+        return this;
+    }
+
     public boolean isInside(Vector3 vector3) {
         return isInside(vector3.x, vector3.y);
     }
@@ -87,21 +104,29 @@ public class Node extends Vector2 {
     }
 
     public boolean isInside(float x, float y) {
-        if (posVector.y - HEIGHT / 2 <= y && y <= posVector.y - HEIGHT / 4) {
-            if (posVector.x - WIDTH / 2 <= x && x <= posVector.x + WIDTH / 2) {
-                float lengthX = Math.abs(posVector.x - x);
-                float lengthY = Math.abs(posVector.y - LENGTH * 0.5f - y) * ROOT3DIV2 * 2;
+        if (this.y - HEIGHT / 2 <= y && y <= this.y - HEIGHT / 4) {
+            if (this.x - WIDTH / 2 <= x && x <= this.x + WIDTH / 2) {
+                float lengthX = Math.abs(this.x - x);
+                float lengthY = Math.abs(this.y - LENGTH * 0.5f - y) * ROOT3DIV2 * 2;
                 return lengthX + lengthY <= LENGTH * ROOT3DIV2;
             }
             return false;
-        } else if (posVector.y - HEIGHT / 4 <= y && y <= posVector.y + HEIGHT / 4) {
-            return (posVector.x - WIDTH / 2 <= x && x <= posVector.x + WIDTH / 2);
-        } else if (posVector.y + HEIGHT / 4 <= y && y <= posVector.y + HEIGHT / 2) {
-            float lengthX = Math.abs(posVector.x - x);
-            float lengthY = Math.abs(posVector.y + LENGTH * 0.5f - y) * ROOT3DIV2 * 2;
+        } else if (this.y - HEIGHT / 4 <= y && y <= this.y + HEIGHT / 4) {
+            return (this.x - WIDTH / 2 <= x && x <= this.x + WIDTH / 2);
+        } else if (this.y + HEIGHT / 4 <= y && y <= this.y + HEIGHT / 2) {
+            float lengthX = Math.abs(this.x - x);
+            float lengthY = Math.abs(this.y + LENGTH * 0.5f - y) * ROOT3DIV2 * 2;
             return lengthX + lengthY <= LENGTH * ROOT3DIV2;
         }
         return false;
+    }
+
+    public Vector2 getBorderAtAngle(float rad, float length) {
+        return Vector2.X.rotateRad(rad).setLength(length).add(this);
+    }
+
+    public boolean isAllyWalkable() {
+        return (type == Type.PLAIN_TILE || type == Type.ENEMY_PATH) && (building == null || BuildingComponent.getComponent(building).walkable);
     }
 
     public int nodeDistance(Node node) {

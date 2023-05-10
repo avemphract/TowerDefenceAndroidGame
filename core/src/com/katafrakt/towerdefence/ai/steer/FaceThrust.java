@@ -22,7 +22,7 @@ public class FaceThrust extends Face<Vector2> {
     protected SteeringAcceleration<Vector2> calculateRealSteering(SteeringAcceleration<Vector2> steering) {
         if (faceActive)
             super.calculateRealSteering(steering);
-        steering.linear.set(Vector2.X.cpy().rotateRad(owner.getOrientation() - MathUtils.HALF_PI).setLength(owner.getMaxLinearAcceleration()));
+        steering.linear.set(Vector2.X.cpy().rotateRad(target.getOrientation() - MathUtils.HALF_PI).setLength(owner.getMaxLinearAcceleration()));
         return steering;
     }
 

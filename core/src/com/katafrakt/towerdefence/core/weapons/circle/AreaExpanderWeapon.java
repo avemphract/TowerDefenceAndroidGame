@@ -2,6 +2,7 @@ package com.katafrakt.towerdefence.core.weapons.circle;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.katafrakt.towerdefence.Main;
@@ -24,7 +25,7 @@ public class AreaExpanderWeapon extends Weapon {
     public void attack(Entity target) {
         float remainingTime = range / radiusSpeed;
         spawn(ownerTransform, radiusSpeed, remainingTime, attackAmount);
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     public static void spawn(Vector2 pos, float radiusSpeed, float remainingTime, float damage) {

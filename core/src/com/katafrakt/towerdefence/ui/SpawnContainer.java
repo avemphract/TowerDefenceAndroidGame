@@ -15,6 +15,9 @@ import com.katafrakt.towerdefence.entities.BuildingType;
 import com.katafrakt.towerdefence.input.SpawnTabType;
 import com.katafrakt.towerdefence.input.TabType;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class SpawnContainer extends Container<Table> {
     private static final String TAG = SpawnContainer.class.getSimpleName();
     private static final int SCREEN_WIDTH = Gdx.graphics.getWidth();
@@ -32,7 +35,7 @@ public class SpawnContainer extends Container<Table> {
 
         setSize(TRANSFORM.width, TRANSFORM.height);
         setPosition(TRANSFORM.x, TRANSFORM.y);
-        for (BuildingType tower : BuildingType.values()) {
+        for (BuildingType tower : Arrays.stream(BuildingType.values()).filter(buildingType -> buildingType.isBuildable).collect(Collectors.toList())) {
             SpawnObject spawnObject = new SpawnObject(tower);
             getActor().add(spawnObject).size(TRANSFORM.width, TRANSFORM.width);
             getActor().row();

@@ -1,6 +1,7 @@
 package com.katafrakt.towerdefence.ai;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.utils.Array;
@@ -12,6 +13,17 @@ import com.katafrakt.towerdefence.ashley.components.buildings.TowerComponent;
 import com.katafrakt.towerdefence.screens.GameManager;
 
 public enum BasicTowerState implements State<TowerAiComponent> {
+    UNDER_CONSTRUCTION(){
+        @Override
+        public void enter(TowerAiComponent entity) {
+
+        }
+
+        @Override
+        public void exit(TowerAiComponent entity) {
+
+        }
+    },
     IDLING() {
         @Override
         public void enter(TowerAiComponent entity) {
@@ -31,10 +43,6 @@ public enum BasicTowerState implements State<TowerAiComponent> {
 
         }
 
-        @Override
-        public boolean onMessage(TowerAiComponent entity, Telegram telegram) {
-            return false;
-        }
     },
     ATTACKING() {
         @Override
@@ -53,37 +61,37 @@ public enum BasicTowerState implements State<TowerAiComponent> {
                 }
             }
             TransformComponent targetTransform = TransformComponent.MAPPER.get(towerAiComponent.getTarget());
-            if (targetTransform.dst2(transformComponent) > towerComponent.weapon.getRange() * towerComponent.weapon.getRange()) {
+            if (targetTransform.dst2(transformComponent) > towerComponent.weapon.getRange2()) {
                 towerAiComponent.setTarget(null);
                 towerAiComponent.stateMachine.changeState(BasicTowerState.IDLING);
                 return;
             }
-            if (towerComponent.weapon.remainPercent() > 1) {
-                towerComponent.weapon.attack(towerAiComponent.getTarget());
-            }
-
+            towerComponent.weapon.update();
         }
 
         @Override
         public void exit(TowerAiComponent entity) {
-
+            entity.setTarget(null);
         }
 
-        @Override
-        public boolean onMessage(TowerAiComponent entity, Telegram telegram) {
-            return false;
-        }
     };
     protected static final String TAG = BasicTowerState.class.getSimpleName();
-    protected TowerAiComponent towerAiComponent;
     protected TowerComponent towerComponent;
     protected TransformComponent transformComponent;
 
     @Override
     public void update(TowerAiComponent towerAiComponent) {
-        this.towerAiComponent = towerAiComponent;
         towerComponent = TowerComponent.MAPPER.get(towerAiComponent.entity);
         transformComponent = TransformComponent.MAPPER.get(towerAiComponent.entity);
+    }
+
+    @Override
+    public boolean onMessage(TowerAiComponent aiComponent, Telegram telegram) {
+        if (telegram.message==MessageTypes.CONSTRUCT.ordinal()){
+            aiComponent.stateMachine.changeState(UNDER_CONSTRUCTION);
+        }
+        Gdx.app.log(TAG,"Message arrive");
+        return false;
     }
 
     public void scan(TowerAiComponent towerAiComponent) {
@@ -99,5 +107,10 @@ public enum BasicTowerState implements State<TowerAiComponent> {
         potentialTargets.sort(towerAiComponent.enemyComparator);
         if (!potentialTargets.isEmpty())
             towerAiComponent.setTarget(potentialTargets.get(0));
+    }
+
+
+    public enum MessageTypes{
+        CONSTRUCT
     }
 }

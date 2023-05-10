@@ -2,6 +2,7 @@ package com.katafrakt.towerdefence.core.weapons.mortar;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -38,7 +39,7 @@ public class MortarWeapon extends Weapon {
         Vector2 vel = targetTransform.cpy().mulAdd(ownerTransform, -1).setLength(MathUtils.clamp(targetTransform.dst(ownerTransform),0,range) / time);
 
         spawn(ownerTransform, vel, attackAmount, time, bulletRadius);
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     public float getAccuracyRadius() {

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Pool;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
@@ -18,7 +19,7 @@ import com.katafrakt.towerdefence.core.weapons.rocket.RocketWeapon;
 import com.katafrakt.towerdefence.utility.BeforeEngine;
 import com.katafrakt.towerdefence.utility.DebugRender;
 
-public class TowerComponent implements Component, Pool.Poolable, BeforeEngine, DebugRender {
+public class TowerComponent extends BuildingComponent implements DebugRender {
     private static final String TAG = TowerComponent.class.getSimpleName();
     public static ComponentMapper<TowerComponent> MAPPER = ComponentMapper.getFor(TowerComponent.class);
 
@@ -37,7 +38,7 @@ public class TowerComponent implements Component, Pool.Poolable, BeforeEngine, D
 
     @Override
     public void beforeEngine(PooledEngine engine, Entity own) {
-
+        super.beforeEngine(engine,own);
     }
 
     @Override
@@ -59,8 +60,7 @@ public class TowerComponent implements Component, Pool.Poolable, BeforeEngine, D
             } else if (weapon instanceof RocketWeapon) {
                 shapeRenderer.line(targetTransform.x - 5, targetTransform.y, targetTransform.x + 5, targetTransform.y);
                 shapeRenderer.line(targetTransform.x, targetTransform.y - 5, targetTransform.x, targetTransform.y + 5);
-            }
-            else if (weapon instanceof LaserWeapon){
+            } else if (weapon instanceof LaserWeapon) {
                 shapeRenderer.line(transformComponent, targetTransform);
             }
         }

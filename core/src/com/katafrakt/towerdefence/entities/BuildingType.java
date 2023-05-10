@@ -35,7 +35,7 @@ import com.katafrakt.towerdefence.utility.DebugShapes;
 import javafx.util.Builder;
 
 public enum BuildingType {
-    BASIC() {
+    BASIC(true) {
         final BulletWeapon.Builder<?, BulletWeapon> builder1 = new BulletWeapon.Builder<>()
                 .setAttackType(AttackType.MECHANIC)
                 .setAttackAmount(10)
@@ -141,7 +141,7 @@ public enum BuildingType {
                 .setTime(1);
 
         public Builder<Weapon> weaponBuilder() {
-            return builder11;
+            return builder4;
         }
 
         @Override
@@ -156,14 +156,15 @@ public enum BuildingType {
 
             entity.add(engine.createComponent(TowerComponent.class).init(entity, weaponBuilder().build()));
             entity.add(engine.createComponent(TowerAiComponent.class).init(entity, new FirstEnemy()));
-            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.LineHexagon(Color.BLACK, 5)));
+            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledHexagon(new Color(0xff7f5099), 5)));
             entity.add(engine.createComponent(NameComponent.class).init("Basic"));
+            node.setBuilding(entity);
 
             engine.addEntity(entity);
             return entity;
         }
     },
-    SNIPER() {
+    SNIPER(true) {
         final BulletWeapon.Builder<?, BulletWeapon> builder = new BulletWeapon.Builder<>()
                 .setAttackType(AttackType.MECHANIC)
                 .setAttackAmount(40)
@@ -189,14 +190,14 @@ public enum BuildingType {
 
             entity.add(engine.createComponent(TowerComponent.class).init(entity, builder.build()));
             entity.add(engine.createComponent(TowerAiComponent.class).init(entity, new FirstEnemy()));
-            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.LineHexagon(Color.LIGHT_GRAY, 6)));
+            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledHexagon(new Color(0xbfbfbf99), 6)));
             entity.add(engine.createComponent(NameComponent.class).init("Sniper"));
 
             engine.addEntity(entity);
             return entity;
         }
     },
-    COLLECTOR() {
+    COLLECTOR(true) {
         @Override
         public Entity spawn(Node node) {
             PooledEngine engine = GameManager.getInstance().getEngine();
@@ -207,7 +208,7 @@ public enum BuildingType {
             entity.add(engine.createComponent(FocusableComponent.class).init(FocusableComponent.Type.TOWER,
                     new RemovePlayerAction(entity), new UpgradePlayerAction(entity)));
 
-            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.LineHexagon(Color.MAROON, 6)));
+            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledHexagon(new Color(0xdaa52099), 6)));
             entity.add(engine.createComponent(CollectorComponent.class).init(3, 1));
             entity.add(engine.createComponent(NameComponent.class).init("Collector"));
 
@@ -215,7 +216,7 @@ public enum BuildingType {
             return entity;
         }
     },
-    MINER(){
+    MINER(true) {
         @Override
         public Entity spawn(Node node) {
             PooledEngine engine = GameManager.getInstance().getEngine();
@@ -226,17 +227,40 @@ public enum BuildingType {
             entity.add(engine.createComponent(FocusableComponent.class).init(FocusableComponent.Type.TOWER,
                     new RemovePlayerAction(entity), new UpgradePlayerAction(entity)));
 
-            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.LineHexagon(Color.MAROON, 6)));
+            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledHexagon(new Color(0xfa807299), 6)));
             entity.add(engine.createComponent(MinerComponent.class));
             entity.add(engine.createComponent(NameComponent.class).init("Collector"));
 
             engine.addEntity(entity);
             return entity;
         }
+    },
+    BASEMENT(false){
+        @Override
+        public Entity spawn(Node node) {
+            PooledEngine engine = GameManager.getInstance().getEngine();
+
+            Entity entity = engine.createEntity();
+            entity.add(engine.createComponent(TransformComponent.class).init(node.x, node.y));
+            entity.add(engine.createComponent(BoundComponent.class).init(Node.HEIGHT*2,Node.WIDTH*2));
+            entity.add(engine.createComponent(FocusableComponent.class).init(FocusableComponent.Type.TOWER,
+                    new RemovePlayerAction(entity), new UpgradePlayerAction(entity), new UpgradePlayerAction(entity)));
+
+            entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledHexagon(new Color(0xb0306099), 15,MathUtils.PI/6)));
+            entity.add(engine.createComponent(MinerComponent.class));
+            entity.add(engine.createComponent(NameComponent.class).init("Basement"));
+
+            engine.addEntity(entity);
+            return entity;
+        }
     };
+    public static final int MESSAGE = 1;
 
+    public final boolean isBuildable;
 
-
+    BuildingType(boolean isBuildable) {
+        this.isBuildable = isBuildable;
+    }
 
     public abstract Entity spawn(Node node);
 

@@ -2,6 +2,7 @@ package com.katafrakt.towerdefence.core.weapons.rocket;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -17,7 +18,7 @@ import com.katafrakt.towerdefence.ashley.components.entities.bullets.RocketCompo
 import com.katafrakt.towerdefence.core.weapons.Weapon;
 import com.katafrakt.towerdefence.screens.GameManager;
 import com.katafrakt.towerdefence.utility.DebugShapes;
-import com.katafrakt.towerdefence.utility.LocationAdapter;
+import com.katafrakt.towerdefence.utility.LocationTransform;
 
 public class RocketWeapon extends Weapon {
     private static final String TAG = RocketWeapon.class.getSimpleName();
@@ -46,7 +47,7 @@ public class RocketWeapon extends Weapon {
     @Override
     public void attack(Entity target) {
         spawn(this, target,Vector2.X.cpy().setToRandomDirection());
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     public static Entity spawn(RocketWeapon rocketWeapon, Entity target, Vector2 rocketDirection) {
@@ -85,7 +86,7 @@ public class RocketWeapon extends Weapon {
                 .maxAngularAcceleration(rocketWeapon.getMaxAngularAcceleration());
         SteeringComponent steeringComponent = engine.createComponent(SteeringComponent.class).init(builder);
 
-        steeringComponent.behavior = new FaceThrust(steeringComponent, new LocationAdapter(targetTransform))
+        steeringComponent.behavior = new FaceThrust(steeringComponent, new LocationTransform(targetTransform))
                 .setTimeToTarget(0.01f)
                 .setAlignTolerance(0.1f)
                 .setDecelerationRadius(MathUtils.degreesToRadians * 1);

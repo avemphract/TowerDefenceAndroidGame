@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -36,16 +38,16 @@ public class DebugGraphicSystem extends IteratingSystem {
 
     @Override
     public void update(float deltaTime) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.GRAY);
-        for (float i = (camera.position.x - camera.viewportWidth * camera.zoom / 2) - (camera.position.x - camera.viewportWidth * camera.zoom / 2) % Node.WIDTH; i < camera.position.x + camera.viewportWidth * camera.zoom / 2; i += Node.WIDTH) {
-            shapeRenderer.line(i, camera.position.y - camera.viewportHeight * camera.zoom / 2, i, camera.position.y + camera.viewportHeight * camera.zoom / 2);
-        }
-        for (float i = (camera.position.y - camera.viewportHeight * camera.zoom / 2) - (camera.position.y - camera.viewportHeight * camera.zoom / 2) % (Node.HEIGHT * 1.5f); i < camera.position.y + camera.viewportHeight * camera.zoom / 2; i += Node.HEIGHT * 1.5f) {
-            shapeRenderer.line(camera.position.x - camera.viewportWidth * camera.zoom / 2, i, camera.position.x + camera.viewportWidth * camera.zoom / 2, i);
-        }
+        //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        //shapeRenderer.setColor(Color.GRAY);
+        //for (float i = (camera.position.x - camera.viewportWidth * camera.zoom / 2) - (camera.position.x - camera.viewportWidth * camera.zoom / 2) % Node.WIDTH; i < camera.position.x + camera.viewportWidth * camera.zoom / 2; i += Node.WIDTH) {
+        //    shapeRenderer.line(i, camera.position.y - camera.viewportHeight * camera.zoom / 2, i, camera.position.y + camera.viewportHeight * camera.zoom / 2);
+        //}
+        //for (float i = (camera.position.y - camera.viewportHeight * camera.zoom / 2) - (camera.position.y - camera.viewportHeight * camera.zoom / 2) % (Node.HEIGHT * 1.5f); i < camera.position.y + camera.viewportHeight * camera.zoom / 2; i += Node.HEIGHT * 1.5f) {
+        //    shapeRenderer.line(camera.position.x - camera.viewportWidth * camera.zoom / 2, i, camera.position.x + camera.viewportWidth * camera.zoom / 2, i);
+        //}
         super.update(deltaTime);
-        shapeRenderer.end();
+        //shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Pair<DebugShapes, Vector2> pair : lineShapes) {
@@ -64,6 +66,9 @@ public class DebugGraphicSystem extends IteratingSystem {
 
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         for (Pair<DebugShapes, Vector2> pair : filledShapes) {
             if (pair.getValue() instanceof TransformComponent) {
                 pair.getKey().render(shapeRenderer, (TransformComponent) pair.getValue());
@@ -71,6 +76,7 @@ public class DebugGraphicSystem extends IteratingSystem {
                 pair.getKey().render(shapeRenderer, pair.getValue(), 0);
             }
         }
+
         shapeRenderer.end();
         filledShapes.clear();
     }

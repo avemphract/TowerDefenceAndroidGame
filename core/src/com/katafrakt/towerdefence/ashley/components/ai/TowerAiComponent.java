@@ -4,18 +4,17 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.katafrakt.towerdefence.ai.BasicTowerState;
-import com.katafrakt.towerdefence.ai.WalkableMachine;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
-import com.katafrakt.towerdefence.entities.EntityType;
+import com.katafrakt.towerdefence.entities.BuildingType;
+import com.katafrakt.towerdefence.entities.EnemyType;
 import com.katafrakt.towerdefence.pfa.Node;
 
 import java.util.Comparator;
 
-public class TowerAiComponent extends AiComponent<BasicTowerState> {
+public class TowerAiComponent extends AiComponent<BasicTowerState> implements HaveTarget {
     public static final ComponentMapper<TowerAiComponent> MAPPER = ComponentMapper.getFor(TowerAiComponent.class);
     public Comparator<Entity> enemyComparator;
 
@@ -25,7 +24,7 @@ public class TowerAiComponent extends AiComponent<BasicTowerState> {
 
     @Override
     public boolean handleMessage(Telegram msg) {
-        return false;
+        return stateMachine.handleMessage(msg);
     }
 
     public TowerAiComponent init(Entity entity, Comparator<Entity> enemyComparator) {
@@ -34,7 +33,6 @@ public class TowerAiComponent extends AiComponent<BasicTowerState> {
         this.enemyComparator = enemyComparator;
         transformComponent = TransformComponent.MAPPER.get(entity);
         stateMachine = new DefaultStateMachine<>(this, BasicTowerState.IDLING);
-        MessageManager.getInstance().addListener(this, EntityType.PLAYER.ordinal());
         return this;
     }
 

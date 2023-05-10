@@ -33,9 +33,7 @@ public class EnemySystem extends IteratingSystem {
         HealthComponent healthComponent = HealthComponent.MAPPER.get(entity);
 
         enemyComponent.progress = map.endRemain.get(map.startNode) - map.endRemain.get(enemyAiComponent.getCurrentNode());
-        if (healthComponent.getCurrentHealth() <= 0) {
-            healthComponent.setAlive(false);
-            SteeringComponent.MAPPER.get(entity).behavior = null;
+        if (!healthComponent.isAlive()) {
             VelocityComponent.MAPPER.get(entity).init(0, 0);
             enemyComponent.deathTime += deltaTime;
             if (enemyComponent.deathTime > 1) {

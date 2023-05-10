@@ -2,6 +2,7 @@ package com.katafrakt.towerdefence.desktop.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.katafrakt.towerdefence.Main;
@@ -32,12 +33,13 @@ public class DesktopInput extends InputProcessorModified {
 
     Vector3 gamePos = new Vector3();
     float lastClickedTime;
-
+    Vector2 touchDownGameScreen=new Vector2();
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         gamePos.set(screenX, screenY, 0);
         Gdx.app.debug(TAG, "Touched Down: gameX: " + camera.unproject(gamePos));
-        lastClickedTime = Main.getMain().getTotalTime();
+        lastClickedTime = GdxAI.getTimepiece().getTime();
+        touchDownGameScreen.set(screenX,screenY);
         return false;
 
     }
@@ -46,7 +48,7 @@ public class DesktopInput extends InputProcessorModified {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         camera.unproject(gamePos);
         lastMousePosition = null;
-        if (Main.getMain().getTotalTime() - lastClickedTime < 0.5f) {
+        if (GdxAI.getTimepiece().getTime() - lastClickedTime < 0.5f && touchDownGameScreen.dst2(screenX,screenY)<5) {
             Main.getMain().getInputProcessor().getTabType().tab(screenX, screenY);
         }
         return false;

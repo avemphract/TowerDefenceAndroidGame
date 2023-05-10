@@ -7,11 +7,18 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
+import com.badlogic.gdx.ai.steer.behaviors.FollowPath;
+import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
+import com.badlogic.gdx.ai.steer.behaviors.RaycastObstacleAvoidance;
+import com.badlogic.gdx.ai.steer.utils.Path;
 import com.badlogic.gdx.ai.steer.utils.paths.LinePath;
 import com.badlogic.gdx.ai.utils.Location;
+import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.katafrakt.towerdefence.ai.steer.FaceThrust;
 import com.katafrakt.towerdefence.ai.steer.NodeFollowPath;
@@ -37,6 +44,7 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
 
     //behaviour
     public SteeringBehavior<Vector2> behavior;
+    public Array<SteeringBehavior<Vector2>> unUsedBehaviors = new Array<>();
     //output
     public SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2(), 0);
 
@@ -180,20 +188,39 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
 
     @Override
     public void render(ShapeRenderer shapeRenderer, Entity entity) {
-        //TransformComponent transformComponent = TransformComponent.MAPPER.get(entity);
-        if (behavior instanceof NodeFollowPath) {
-            Vector2 vector2 = ((NodeFollowPath) behavior).getInternalTargetPosition();
+        TransformComponent transformComponent = TransformComponent.MAPPER.get(entity);
+        shapeRenderer.setColor(Color.DARK_GRAY);
+        shapeRenderer.rectLine(transformComponent.x, transformComponent.y, transformComponent.x + steeringOutput.linear.x, transformComponent.y + steeringOutput.linear.y, 1);
+        renderBehaviour(shapeRenderer, entity, this.behavior);
+        for (SteeringBehavior steeringBehavior : unUsedBehaviors)
+            renderBehaviour(shapeRenderer, entity, steeringBehavior);
+    }
+
+    public void renderBehaviour(ShapeRenderer shapeRenderer, Entity entity, SteeringBehavior<Vector2> behavior) {
+        if (behavior instanceof FollowPath) {
+            Vector2 vector2 = ((FollowPath<Vector2, Path.PathParam>) behavior).getInternalTargetPosition();
             shapeRenderer.setColor(Color.DARK_GRAY);
             shapeRenderer.circle(vector2.x, vector2.y, 0.6f);
             shapeRenderer.circle(vector2.x, vector2.y, 0.3f);
 
             shapeRenderer.setColor(Color.BROWN);
-            for (LinePath.Segment<Vector2> segment : ((LinePath<Vector2>) ((NodeFollowPath) behavior).getPath()).getSegments()) {
+            for (LinePath.Segment<Vector2> segment : ((LinePath<Vector2>) ((FollowPath) behavior).getPath()).getSegments()) {
                 shapeRenderer.line(segment.getBegin().x, segment.getBegin().y, segment.getEnd().x, segment.getEnd().y);
             }
         }
         if (behavior instanceof FaceThrust) {
 
+        }
+        if (behavior instanceof Arrive) {
+            //System.out.println(((Arrive<Vector2>) behavior).getTarget());
+            if (((Arrive<Vector2>) behavior).getTarget() != null)
+                shapeRenderer.circle(((Arrive<Vector2>) behavior).getTarget().getPosition().x, ((Arrive<Vector2>) behavior).getTarget().getPosition().y, 0.4f);
+        }
+        if (behavior instanceof RaycastObstacleAvoidance) {
+            shapeRenderer.setColor(Color.BLACK);
+            for (Ray<Vector2> v : ((RaycastObstacleAvoidance<Vector2>) behavior).getRayConfiguration().updateRays()) {
+                shapeRenderer.line(v.start.x, v.start.y, v.end.x, v.end.y);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.katafrakt.towerdefence.core.weapons.rocket;
 
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.katafrakt.towerdefence.Main;
@@ -24,7 +25,7 @@ public class RotatedRocketWeapon extends RocketWeapon {
 
         Vector2 vel = targetTransform.cpy().mulAdd(ownerTransform, -1);
         spawn(this, target, vel);
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     public static class Builder<B extends RotatedRocketWeapon.Builder<B, T>, T extends RotatedRocketWeapon> extends RocketWeapon.Builder<B, T> {

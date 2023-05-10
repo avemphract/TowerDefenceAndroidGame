@@ -12,12 +12,11 @@ import com.katafrakt.towerdefence.ashley.components.HealthComponent;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
 import com.katafrakt.towerdefence.ashley.components.VelocityComponent;
 import com.katafrakt.towerdefence.ashley.components.ai.SteeringComponent;
-import com.katafrakt.towerdefence.ashley.components.entities.EnemyComponent;
 import com.katafrakt.towerdefence.map.Map;
 import com.katafrakt.towerdefence.pfa.Node;
 import com.katafrakt.towerdefence.screens.GameManager;
 import com.katafrakt.towerdefence.utility.AfterEngine;
-import com.katafrakt.towerdefence.utility.LocationAdapter;
+import com.katafrakt.towerdefence.utility.LocationTransform;
 
 public class RocketComponent implements Component, Pool.Poolable, AfterEngine {
     private static final String TAG = RocketComponent.class.getSimpleName();
@@ -85,7 +84,7 @@ public class RocketComponent implements Component, Pool.Poolable, AfterEngine {
                     continue;
                 for (Entity enemy : node.enemyEntities) {
                     rocketComponent.setTarget(enemy);
-                    ((FaceThrust) steeringComponent.behavior).setTarget(new LocationAdapter(TransformComponent.MAPPER.get(enemy)));
+                    ((FaceThrust) steeringComponent.behavior).setTarget(new LocationTransform(TransformComponent.MAPPER.get(enemy)));
                     return;
                 }
             }
@@ -108,7 +107,7 @@ public class RocketComponent implements Component, Pool.Poolable, AfterEngine {
                     if (node == null)
                         continue;
                     for (Entity enemy : node.enemyEntities) {
-                        ((FaceThrust) steeringComponent.behavior).setTarget(new LocationAdapter(TransformComponent.MAPPER.get(enemy)));
+                        ((FaceThrust) steeringComponent.behavior).setTarget(new LocationTransform(TransformComponent.MAPPER.get(enemy)));
                         return;
                     }
                 }

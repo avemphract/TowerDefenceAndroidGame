@@ -8,13 +8,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.katafrakt.towerdefence.Main;
+import com.katafrakt.towerdefence.ai.MinionState;
 import com.katafrakt.towerdefence.ashley.EntityListener;
 import com.katafrakt.towerdefence.ashley.system.AiSystem;
 import com.katafrakt.towerdefence.ashley.system.EffectSystem;
+import com.katafrakt.towerdefence.ashley.system.UnderConstructionSystem;
 import com.katafrakt.towerdefence.ashley.system.bullets.AreaExpanderSystem;
 import com.katafrakt.towerdefence.ashley.system.bullets.BulletSystem;
 import com.katafrakt.towerdefence.ashley.system.DebugGraphicSystem;
@@ -29,12 +30,13 @@ import com.katafrakt.towerdefence.ashley.system.SteeringSystem;
 import com.katafrakt.towerdefence.ashley.system.VelocitySystem;
 import com.katafrakt.towerdefence.core.resources.Energy;
 import com.katafrakt.towerdefence.core.resources.Resource;
-import com.katafrakt.towerdefence.entities.spawner.EnemySpawner;
+import com.katafrakt.towerdefence.entities.EnemyType;
+import com.katafrakt.towerdefence.entities.MinionType;
+import com.katafrakt.towerdefence.entities.PlayerType;
 import com.katafrakt.towerdefence.entities.EntityInput;
 import com.katafrakt.towerdefence.entities.BuildingType;
 import com.katafrakt.towerdefence.map.Map;
 import com.katafrakt.towerdefence.map.MapLoader;
-import com.katafrakt.towerdefence.pfa.Node;
 import com.katafrakt.towerdefence.ui.PlayerHud;
 import com.katafrakt.towerdefence.utility.AfterEngine;
 import com.katafrakt.towerdefence.utility.BeforeEngine;
@@ -46,7 +48,6 @@ public class GameScreen implements Screen {
 
     private final SpriteBatch spriteBatch;
     private final PooledEngine pooledEngine;
-    private EnemySpawner enemySpawner;
     private final EntityInput entityInput;
     private final InputProcessor desktopInput;
     private final Map map;
@@ -91,12 +92,15 @@ public class GameScreen implements Screen {
         GameManager.getInstance().setMap(map).setEngine(pooledEngine).setCamera(camera);
 
         GameManager.getInstance().getInputMultiplexer().addProcessor(desktopInput);
+        //BuildingType.BASEMENT.spawn(map.endNode);
+
         //Gdx.input.setInputProcessor(new InputMultiplexer(desktopInput, entityInput.listener));
 
 
         pooledEngine.addSystem(new DebugGraphicSystem(camera, shapeRenderer));
         pooledEngine.addSystem(new DebugLogSystem());
         pooledEngine.addSystem(new HealthDebugSystem(shapeRenderer));
+        pooledEngine.addSystem(new UnderConstructionSystem());
 
         pooledEngine.addSystem(new AiSystem());
         pooledEngine.addSystem(new EnemySystem());
@@ -117,12 +121,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        enemySpawner = new EnemySpawner();
         for (int i = 0; i < 51; i++) {
-            enemySpawner.spawn(map.startNode.x - Node.LENGTH / 2 + MathUtils.random(Node.LENGTH), map.startNode.y - Node.LENGTH / 2 + MathUtils.random(Node.LENGTH));
+            //EnemyType.ENEMY.createEntity(map.startNode.x - Node.LENGTH / 2 + MathUtils.random(Node.LENGTH), map.startNode.y - Node.LENGTH / 2 + MathUtils.random(Node.LENGTH));
         }
-        BuildingType.BASIC.spawn(map.findFromTable(3, 2));
-        //TowerType.SNIPER.spawn(map.findFromTable(3, 3));
+        Entity player=PlayerType.GUARDER.createEntity(map.findFromTable(3,9));
+
+        EnemyType.ENEMY.createEntity(map.startNode.x, map.startNode.y);
+        //BuildingType.BASIC.spawn(map.findFromTable(3, 2));
 
     }
 
@@ -133,6 +138,7 @@ public class GameScreen implements Screen {
         viewport.apply();
 
         map.render(shapeRenderer, spriteBatch);
+
         spriteBatch.begin();
         pooledEngine.update(delta);
         spriteBatch.end();

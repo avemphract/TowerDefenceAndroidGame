@@ -3,14 +3,15 @@ package com.katafrakt.towerdefence.ashley.components.ai;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.ashley.signals.Signal;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.katafrakt.towerdefence.ai.WalkableMachine;
 import com.katafrakt.towerdefence.ai.EnemyState;
+import com.katafrakt.towerdefence.ashley.components.HealthComponent;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
-import com.katafrakt.towerdefence.entities.EntityType;
+import com.katafrakt.towerdefence.entities.EnemyType;
 import com.katafrakt.towerdefence.pfa.Node;
 import com.katafrakt.towerdefence.screens.GameManager;
 import com.katafrakt.towerdefence.utility.AfterEngine;
@@ -32,7 +33,7 @@ public class EnemyAiComponent extends AiComponent<EnemyState> implements AfterEn
         this.entity = entity;
         transformComponent = TransformComponent.MAPPER.get(entity);
         stateMachine = new WalkableMachine<>(this, EnemyState.FLOW_PATH);
-        MessageManager.getInstance().addListener(this, EntityType.ENEMY.ordinal());
+        MessageManager.getInstance().addListener(this, EnemyType.ENEMY.ordinal());
         currentNode = GameManager.getInstance().getMap().findNode(transformComponent);
         this.currentNode.enemyEntities.add(entity);
         return this;
@@ -43,6 +44,10 @@ public class EnemyAiComponent extends AiComponent<EnemyState> implements AfterEn
         this.currentNode.enemyEntities.remove(entity);
         this.currentNode = currentNode;
         this.currentNode.enemyEntities.add(entity);
+        if (currentNode==GameManager.getInstance().getMap().endNode){
+            Gdx.app.log(TAG,"asda");
+            HealthComponent.MAPPER.get(entity).setAlive(false);
+        }
     }
 
     @Override
@@ -54,6 +59,6 @@ public class EnemyAiComponent extends AiComponent<EnemyState> implements AfterEn
     @Override
     public void afterEngine(PooledEngine engine, Entity own) {
         this.currentNode.enemyEntities.remove(entity);
-        MessageManager.getInstance().removeListener(this,EntityType.ENEMY.ordinal());
+        MessageManager.getInstance().removeListener(this, EnemyType.ENEMY.ordinal());
     }
 }

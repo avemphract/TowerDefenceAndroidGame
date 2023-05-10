@@ -23,15 +23,10 @@ public class SteeringSystem extends IteratingSystem {
             return;
         steeringComponent.behavior.calculateSteering(steeringComponent.steeringOutput);
 
-
         VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
 
-        if ((velocityComponent.len()*1.05f) > steeringComponent.getMaxLinearSpeed()) {
-            velocityComponent.mulAdd(steeringComponent.steeringOutput.linear, deltaTime).limit(MathUtils.lerp(velocityComponent.len(), steeringComponent.getMaxLinearSpeed(), 0.15f));
+        velocityComponent.mulAdd(steeringComponent.steeringOutput.linear, deltaTime).limit(steeringComponent.getMaxLinearSpeed());
 
-        } else {
-            velocityComponent.mulAdd(steeringComponent.steeringOutput.linear, deltaTime).limit(steeringComponent.getMaxLinearSpeed());
-        }
         velocityComponent.angular = -steeringComponent.steeringOutput.angular * deltaTime;
 
     }

@@ -9,7 +9,7 @@ import com.katafrakt.towerdefence.pfa.Node;
 import com.katafrakt.towerdefence.screens.GameManager;
 import com.katafrakt.towerdefence.utility.DebugRender;
 
-public class CollectorComponent implements Component, DebugRender {
+public class CollectorComponent extends BuildingComponent implements DebugRender {
     public static final ComponentMapper<CollectorComponent> MAPPER = ComponentMapper.getFor(CollectorComponent.class);
     public int range;
     public float efficiency;
@@ -26,5 +26,10 @@ public class CollectorComponent implements Component, DebugRender {
         for (Node node : GameManager.getInstance().getMap().viewedConnectedNode(transform, range, Node.Type.OBSTACLE_TILE, Node.Type.ENEMY_PATH)) {
             shapeRenderer.circle(node.x, node.y, Node.LENGTH / 2);
         }
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

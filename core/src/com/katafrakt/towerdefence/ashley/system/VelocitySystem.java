@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
 import com.katafrakt.towerdefence.ashley.components.VelocityComponent;
+import com.katafrakt.towerdefence.ashley.components.ai.SteeringComponent;
 
 public class VelocitySystem extends IteratingSystem {
     public VelocitySystem() {
@@ -14,13 +15,21 @@ public class VelocitySystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        VelocityComponent velocityComponent=VelocityComponent.MAPPER.get(entity);
-        TransformComponent transformComponent=TransformComponent.MAPPER.get(entity);
+        VelocityComponent velocityComponent = VelocityComponent.MAPPER.get(entity);
+        TransformComponent transformComponent = TransformComponent.MAPPER.get(entity);
 
-        transformComponent.x+=velocityComponent.x*deltaTime;
-        transformComponent.y+=velocityComponent.y*deltaTime;
+        if (velocityComponent.len2() < 0.1f) {
+            SteeringComponent steeringComponent = SteeringComponent.MAPPER.get(entity);
+            if (steeringComponent!=null && steeringComponent.getLinearVelocity().len2() < 0.1f) {
+                velocityComponent.x = 0;
+                velocityComponent.y = 0;
+            }
+        } else {
 
-        transformComponent.orientation+=velocityComponent.angular*deltaTime;
+            transformComponent.x += velocityComponent.x * deltaTime;
+            transformComponent.y += velocityComponent.y * deltaTime;
 
+            transformComponent.orientation = velocityComponent.angleRad();
+        }
     }
 }

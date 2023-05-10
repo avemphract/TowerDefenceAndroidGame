@@ -1,5 +1,7 @@
 package com.katafrakt.towerdefence.utility;
 
+import static com.katafrakt.towerdefence.utility.ConstValues.ROOT3DIV2;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -39,17 +41,19 @@ public abstract class DebugShapes {
     public static class FilledHexagon extends DebugShapes {
         private final float[] vertices;
 
-        public FilledHexagon(Color color, float length) {
+        public FilledHexagon(Color color, float length, float radian) {
             super(color, ShapeRenderer.ShapeType.Filled);
-
-            vertices = new float[]{
+            vertices = MatrixCalculator.rotate(new float[]{
                     0, (length),
-                    (length * Node.ROOT3DIV2), (length * 0.5f),
-                    (length * Node.ROOT3DIV2), (-length * 0.5f),
+                    (length * ROOT3DIV2), (+length * 0.5f),
+                    (length * ROOT3DIV2), (-length * 0.5f),
                     0, (-length),
-                    (-length * Node.ROOT3DIV2), (-length * 0.5f),
-                    (-length * Node.ROOT3DIV2), (+length * 0.5f),
-            };
+                    (-length * ROOT3DIV2), (-length * 0.5f),
+                    (-length * ROOT3DIV2), (+length * 0.5f),
+            },radian);
+        }
+        public FilledHexagon(Color color, float length) {
+            this(color,length,0);
         }
 
         @Override
@@ -69,18 +73,20 @@ public abstract class DebugShapes {
     public static class LineHexagon extends DebugShapes {
         private final float[] vertices;
 
-        public LineHexagon(Color color, float length) {
+        public LineHexagon(Color color, float length, float radian) {
             super(color, ShapeRenderer.ShapeType.Line);
-            vertices = new float[]{
+            vertices = MatrixCalculator.rotate(new float[]{
                     0, (length),
-                    (length * Node.ROOT3DIV2), (+length * 0.5f),
-                    (length * Node.ROOT3DIV2), (-length * 0.5f),
+                    (length * ROOT3DIV2), (+length * 0.5f),
+                    (length * ROOT3DIV2), (-length * 0.5f),
                     0, (-length),
-                    (-length * Node.ROOT3DIV2), (-length * 0.5f),
-                    (-length * Node.ROOT3DIV2), (+length * 0.5f),
-            };
+                    (-length * ROOT3DIV2), (-length * 0.5f),
+                    (-length * ROOT3DIV2), (+length * 0.5f),
+            },radian);
         }
-
+        public LineHexagon(Color color, float length) {
+            this(color,length,0);
+        }
 
         @Override
         public void render(ShapeRenderer shapeRenderer, float x, float y, float r) {

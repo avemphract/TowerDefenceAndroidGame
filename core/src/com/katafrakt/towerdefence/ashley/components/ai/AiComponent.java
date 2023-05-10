@@ -13,33 +13,35 @@ import com.katafrakt.towerdefence.ashley.components.TransformComponent;
 import com.katafrakt.towerdefence.pfa.Node;
 
 public abstract class AiComponent<T extends State<? extends AiComponent<T>>> implements Component, Telegraph, Pool.Poolable {
-    private static final String TAG=AiComponent.class.getSimpleName();
-    private static final Family FAMILY = Family.one(PlayerAiComponent.class, EnemyAiComponent.class, TowerAiComponent.class).get();
-    public static AiComponent<?> getComponent(Entity entity){
-        if (!FAMILY.matches(entity))
-            return null;
-        PlayerAiComponent playerAiComponent=PlayerAiComponent.MAPPER.get(entity);
-        if (playerAiComponent!=null)
+    private static final String TAG = AiComponent.class.getSimpleName();
+
+    public static AiComponent<?> getComponent(Entity entity) {
+        PlayerAiComponent playerAiComponent = PlayerAiComponent.MAPPER.get(entity);
+        if (playerAiComponent != null)
             return playerAiComponent;
-        EnemyAiComponent enemyAiComponent=EnemyAiComponent.MAPPER.get(entity);
-        if (enemyAiComponent!=null)
+        EnemyAiComponent enemyAiComponent = EnemyAiComponent.MAPPER.get(entity);
+        if (enemyAiComponent != null)
             return enemyAiComponent;
-        TowerAiComponent towerAiComponent=TowerAiComponent.MAPPER.get(entity);
-        if (towerAiComponent!=null)
+        TowerAiComponent towerAiComponent = TowerAiComponent.MAPPER.get(entity);
+        if (towerAiComponent != null)
             return towerAiComponent;
+        MinionAiComponent minionAiComponent = MinionAiComponent.MAPPER.get(entity);
+        if (minionAiComponent != null)
+            return minionAiComponent;
         throw new RuntimeException("Not found AiComponent");
     }
 
     public Entity entity;
     public TransformComponent transformComponent;
+    public float lastChangedStateTime;
 
 
-    public StateMachine<? extends AiComponent<T>,T> stateMachine;
+    public StateMachine<? extends AiComponent<T>, T> stateMachine;
 
     protected Node currentNode;
 
-    protected AiComponent<T> init(Entity entity){
-        this.entity=entity;
+    protected AiComponent<T> init(Entity entity) {
+        this.entity = entity;
         return this;
     }
 

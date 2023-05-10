@@ -2,12 +2,12 @@ package com.katafrakt.towerdefence.core.weapons.bullet;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.katafrakt.towerdefence.Main;
 import com.katafrakt.towerdefence.ashley.components.TransformComponent;
 import com.katafrakt.towerdefence.core.weapons.Weapon;
-import com.katafrakt.towerdefence.entities.spawner.BulletSpawner;
 
 public class MultiParallelBulletWeapon extends BulletWeapon {
     private static final String TAG = MultiParallelBulletWeapon.class.getSimpleName();
@@ -38,7 +38,7 @@ public class MultiParallelBulletWeapon extends BulletWeapon {
 
             spawn(begin, vel, attackAmount, time, bulletRadius);
         }
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     public static class Builder<B extends MultiParallelBulletWeapon.Builder<B, T>, T extends MultiParallelBulletWeapon> extends BulletWeapon.Builder<B, T> {

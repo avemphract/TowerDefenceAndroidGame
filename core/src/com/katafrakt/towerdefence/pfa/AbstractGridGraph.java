@@ -19,21 +19,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Path;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.katafrakt.towerdefence.map.Map;
+import com.katafrakt.towerdefence.screens.GameManager;
+import com.katafrakt.towerdefence.utility.Pair;
 
-public abstract class AbstractGridGraph implements IndexedGraph<Node> {
+public abstract class AbstractGridGraph<T extends  RaycastCollisionDetector<Vector2>> implements IndexedGraph<Node> {
     private static final String TAG = AbstractGridGraph.class.getSimpleName();
     protected Map map;
 
     protected IndexedAStarPathFinder<Node> pathFinder;
     protected GridHeuristic gridHeuristic = new GridHeuristic();
-    protected PathSmoother<Node, Vector2> pathSmoother;
-    protected RaycastCollisionDetector<Vector2> raycastCollisionDetector;
+    protected PathSmoother<Vector2, Vector2> pathSmoother;
+    public T raycastCollisionDetector;
 
 
     private final BitmapFont bitmapFont = new BitmapFont();
@@ -91,11 +94,31 @@ public abstract class AbstractGridGraph implements IndexedGraph<Node> {
         return map.nodes.size;
     }
 
-    public SmoothableGraphPath<Node, Vector2> getSmoothPath(Node startPoint, Node endPoint) {
-        SmoothableGraphPath<Node, Vector2> path = new DefaultSmoothableGraphPath();
-        pathFinder.searchNodePath(startPoint, endPoint, gridHeuristic, path);
-        pathSmoother.smoothPath(path);
-        return path;
+    public static Array<Vector2> toVector2Array(Array<Node> nodes){
+        Array<Vector2> result=new Array<>();
+        nodes.forEach(n->result.add(new Vector2(n)));
+        return result;
+    }
+
+    public Array<Vector2> getSmoothPath(Vector2 startPos, Vector2 endPos) {
+        DefaultGraphPath<Node> temp = new DefaultSmoothableGraphPath<Node>();
+        Node beginNode = GameManager.getInstance().getMap().findNode(startPos);
+        Node endNode = GameManager.getInstance().getMap().findNode(endPos);
+        if (pathFinder.searchNodePath(beginNode,endNode, gridHeuristic, temp)) {
+            DefaultSmoothableGraphPath<Vector2> result=new DefaultSmoothableGraphPath<>();
+            if (beginNode==endNode){
+                result.add(startPos);
+                result.add(endPos);
+            }
+            else {
+                toVector2Array(temp.nodes).forEach(result::add);
+                result.nodes.first().set(startPos);
+                result.nodes.peek().set(endPos);
+                pathSmoother.smoothPath(result);
+            }
+            return result.nodes;
+        }
+        return new Array<>();
     }
 
     public DefaultGraphPath<Node> getPath(Node startNode, Node endNode) {
@@ -112,11 +135,11 @@ public abstract class AbstractGridGraph implements IndexedGraph<Node> {
         }
     }
 
-    protected static class DefaultSmoothableGraphPath extends DefaultGraphPath<Node> implements SmoothableGraphPath<Node, Vector2> {
+    public static class DefaultSmoothableGraphPath<T extends Vector2> extends DefaultGraphPath<T> implements SmoothableGraphPath<T, Vector2> {
 
         @Override
         public Vector2 getNodePosition(int index) {
-            return get(index).posVector;
+            return get(index);
         }
 
         @Override
@@ -129,4 +152,5 @@ public abstract class AbstractGridGraph implements IndexedGraph<Node> {
             nodes.truncate(newLength);
         }
     }
+
 }

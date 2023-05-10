@@ -3,6 +3,7 @@ package com.katafrakt.towerdefence.core.weapons.laser;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -31,12 +32,11 @@ public class LaserWeapon extends Weapon {
 
     @Override
     public void attack(Entity target) {
-        Gdx.app.log(TAG,"attacked");
         TransformComponent enemyTransform = TransformComponent.MAPPER.get(target);
         Vector2 end=ownerTransform.cpy().add(enemyTransform.cpy().mulAdd(ownerTransform,-1).setLength(range));
 
         spawn(ownerTransform, end, time, attackAmount, penetration);
-        lastAttackTime = Main.getMain().getTotalTime();
+        lastAttackTime = GdxAI.getTimepiece().getTime();
     }
 
     protected static void spawn(Vector2 pos, Vector2 end,

@@ -1,4 +1,4 @@
-package com.katafrakt.towerdefence.entities.spawner;
+package com.katafrakt.towerdefence.entities;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -13,19 +13,24 @@ import com.katafrakt.towerdefence.ashley.components.ai.EnemyAiComponent;
 import com.katafrakt.towerdefence.ashley.components.ai.SteeringComponent;
 import com.katafrakt.towerdefence.ashley.components.entities.EnemyComponent;
 import com.katafrakt.towerdefence.ashley.components.entities.NameComponent;
-import com.katafrakt.towerdefence.enemy.abilities.Amplifier;
-import com.katafrakt.towerdefence.enemy.abilities.controller.DeathOnlyController;
 import com.katafrakt.towerdefence.enemy.abilities.controller.GetDamagedController;
 import com.katafrakt.towerdefence.enemy.abilities.controller.TimeController;
-import com.katafrakt.towerdefence.enemy.abilities.effects.HealInstantEffect;
-import com.katafrakt.towerdefence.enemy.abilities.effects.HealUpdateEffect;
 import com.katafrakt.towerdefence.enemy.abilities.effects.SpeedUpdateEffect;
+import com.katafrakt.towerdefence.pfa.Node;
 import com.katafrakt.towerdefence.screens.GameManager;
 import com.katafrakt.towerdefence.utility.DebugShapes;
 
-public class EnemySpawner {
+public enum EnemyType {
+    ENEMY() {
+        @Override
+        public Entity createEntity(float x, float y) {
+            return createTemplate(x,y);
+        }
+    };
 
-    public Entity spawn(float x, float y) {
+    public abstract Entity createEntity(float x, float y);
+
+    protected Entity createTemplate(float x, float y){
         PooledEngine engine = GameManager.getInstance().getEngine();
         Entity entity = engine.createEntity();
         entity.add(engine.createComponent(TransformComponent.class).init(x, y));
@@ -41,9 +46,10 @@ public class EnemySpawner {
                 .transformComponent(TransformComponent.MAPPER.get(entity))
                 .velocityComponent(VelocityComponent.MAPPER.get(entity))
                 .maxLinearAcceleration(18f)
-                .maxLinearSpeed(9f)
+                .maxLinearSpeed(12f)
                 .maxAngularAcceleration(0.5f)
                 .maxAngularSpeed(2f)
+                .boundRadius(16)
                 .zeroLinearSpeedThreshold(0.001f);
         SteeringComponent steeringComponent = engine.createComponent(SteeringComponent.class).init(builder);
         entity.add(steeringComponent);
