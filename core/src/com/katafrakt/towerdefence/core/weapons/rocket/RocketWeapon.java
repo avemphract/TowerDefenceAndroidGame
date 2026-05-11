@@ -68,9 +68,9 @@ public class RocketWeapon extends Weapon {
 
         RocketComponent rocketComponent = engine.createComponent(RocketComponent.class).init(entity, 50, rocketWeapon.getAttackAmount());
         if (rocketWeapon.isAutoAiming())
-            rocketComponent.aliveListener=((signal, object)->RocketComponent.scanNewTarget(entity));
+            rocketComponent.aliveListener = ((signal, object) -> RocketComponent.scanNewTarget(entity));
         else
-            rocketComponent.aliveListener=((signal, object)->RocketComponent.targetless(entity));
+            rocketComponent.aliveListener = ((signal, object) -> RocketComponent.targetless(entity));
         rocketComponent.setTarget(target);
         entity.add(rocketComponent);
 
@@ -87,9 +87,8 @@ public class RocketWeapon extends Weapon {
         SteeringComponent steeringComponent = engine.createComponent(SteeringComponent.class).init(builder);
 
         steeringComponent.behavior = new FaceThrust(steeringComponent, new LocationTransform(targetTransform))
-                .setTimeToTarget(0.01f)
                 .setAlignTolerance(0.1f)
-                .setDecelerationRadius(MathUtils.degreesToRadians * 1);
+                .setDecelerationRadius(1);
         entity.add(steeringComponent);
 
         entity.add(engine.createComponent(DebugGraphicComponent.class).init(new DebugShapes.FilledRect(Color.FIREBRICK, rocketWeapon.getWidth(), rocketWeapon.getHeight())));

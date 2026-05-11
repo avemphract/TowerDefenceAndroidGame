@@ -29,7 +29,7 @@ public class VelocitySystem extends IteratingSystem {
             transformComponent.x += velocityComponent.x * deltaTime;
             transformComponent.y += velocityComponent.y * deltaTime;
 
-            transformComponent.orientation = velocityComponent.angleRad();
+            transformComponent.orientation += velocityComponent.angular * deltaTime;
         }
     }
 }

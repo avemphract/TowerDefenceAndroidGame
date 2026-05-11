@@ -25,8 +25,8 @@ public class DebugLogSystem extends IntervalIteratingSystem {
     protected void updateInterval() {
         super.updateInterval();
         //Gdx.app.log(TAG,"Size: "+GameManager.getInstance().getEngine().getEntities().size());
-        if (InputProcessorModified.RESUME);
-            EnemyType.ENEMY.createEntity(map.startNode.x, map.startNode.y);
+        if (InputProcessorModified.RESUME)
+            ;EnemyType.ENEMY.createEntity(map.startNode.x, map.startNode.y);
 
     }
 

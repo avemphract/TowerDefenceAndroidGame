@@ -74,21 +74,10 @@ public class RocketComponent implements Component, Pool.Poolable, AfterEngine {
     }
 
     public static void scanNewTarget(Entity entity) {
-        Map map = GameManager.getInstance().getMap();
-        TransformComponent transformComponent = TransformComponent.MAPPER.get(entity);
         SteeringComponent steeringComponent = SteeringComponent.MAPPER.get(entity);
         RocketComponent rocketComponent = RocketComponent.MAPPER.get(entity);
-        for (int i = 0; i < 3; i++) {
-            for (Node node : map.getAllNodeInRange(map.findNode(transformComponent), i)) {
-                if (node == null)
-                    continue;
-                for (Entity enemy : node.enemyEntities) {
-                    rocketComponent.setTarget(enemy);
-                    ((FaceThrust) steeringComponent.behavior).setTarget(new LocationTransform(TransformComponent.MAPPER.get(enemy)));
-                    return;
-                }
-            }
-        }
+        if(rocketComponent.target != null)
+            ((FaceThrust) steeringComponent.behavior).setTarget(new LocationTransform(TransformComponent.MAPPER.get(rocketComponent.target)));
 
         targetless(entity);
     }

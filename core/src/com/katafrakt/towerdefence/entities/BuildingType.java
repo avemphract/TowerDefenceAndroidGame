@@ -118,13 +118,13 @@ public enum BuildingType {
                 .setAttackAmount(1)
                 .setAttackRate(4f)
                 .setRange(35)
-                .setMaxLinearSpeed(15f)
-                .setMaxLinearAcceleration(50f)
-                .setMaxAngularSpeed(200)
-                .setMaxAngularAcceleration(200)
+                .setMaxLinearSpeed(20f)
+                .setMaxLinearAcceleration(30f)
+                .setMaxAngularSpeed(10)
+                .setMaxAngularAcceleration(20)
                 .setWidth(0.5f)
                 .setHeight(1)
-                .setAutoAiming(true)
+                .setAutoAiming(false)
                 .setAccuracy(0.0f);
 
         final AreaExpanderWeapon.Builder<?, AreaExpanderWeapon> builder10 = new AreaExpanderWeapon.Builder<>()
@@ -141,7 +141,7 @@ public enum BuildingType {
                 .setTime(1);
 
         public Builder<Weapon> weaponBuilder() {
-            return builder4;
+            return builder9;
         }
 
         @Override

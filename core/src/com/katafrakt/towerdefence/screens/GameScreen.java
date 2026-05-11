@@ -127,7 +127,7 @@ public class GameScreen implements Screen {
         Entity player=PlayerType.GUARDER.createEntity(map.findFromTable(3,9));
 
         EnemyType.ENEMY.createEntity(map.startNode.x, map.startNode.y);
-        //BuildingType.BASIC.spawn(map.findFromTable(3, 2));
+        BuildingType.BASIC.spawn(map.findFromTable(3, 2));
 
     }
 

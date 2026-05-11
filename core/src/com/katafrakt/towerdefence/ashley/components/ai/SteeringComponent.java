@@ -182,6 +182,7 @@ public class SteeringComponent implements Steerable<Vector2>, Component, Pool.Po
 
         //behaviour
         behavior = null;
+        unUsedBehaviors.clear();
         //output
         steeringOutput.setZero();
     }
